@@ -1,0 +1,19 @@
+@charset "UTF-8";
+
+
+table.offersTable {
+	border-collapse: collapse;
+	border: 2px solid blue;
+}
+
+th {
+	height: 50px;
+	padding: 5px;
+	border: 2px solid blue;
+}
+
+td {
+	border: 1px solid blue;
+	height: 30px;
+	padding: 5px;
+}

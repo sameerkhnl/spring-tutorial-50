@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+.createAccountTable {
+	border: 1px solid blue;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 400px;
+	height: 200px;
+	margin-top: -100px;
+	margin-left: -200px;
+	padding: 5px;
+}
+
+.error {
+	font-size: small;
+	color: red;
+}
+
+input[type=text], input[type=password] {
+	width: 200px
+}
+
+h2 {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	height: 20px;
+	width: 400px;
+	margin-left: -200px;
+	margin-top: -150px;
+	display: inline-block;
+	text-align: center;
+
+}
+
+.label {
+	vertical-align: top;
+}
+
+.passwordsmatch {
+	color:green;
+}
+
+.passwordsdonotmatch{
+	color:red;
+}

@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+.loginTable { 
+	width: 300px;
+	padding: 10px 10px;
+	border: 1px solid blue;
+	padding: 10px 10px;
+}
+
+input[type=text] {
+	width: 200px;
+}
+
+input[type=password] {
+	width: 200px;
+}
+
+.loginErrorMsg {
+	color: red;	
+	padding-bottom: 7px;
+}
