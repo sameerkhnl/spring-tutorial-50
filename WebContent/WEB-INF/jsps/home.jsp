@@ -7,10 +7,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <title>home</title>
 </head>
 <body>
+
+
+
 <p><a href="${pageContext.request.contextPath}/offers">show current offers</a></p>
 <p><a href="${pageContext.request.contextPath}/createoffer">add a new offer</a></p>
+
+<c:url var="logoutUrl" value="/logout" />
+<form action="${logoutUrl}" method="post">
+ <input type="submit" value="Log out" />
+ <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
+
+</form>
+
+
 </body>
 </html>
