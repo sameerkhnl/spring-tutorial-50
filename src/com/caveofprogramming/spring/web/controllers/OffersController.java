@@ -21,7 +21,7 @@ public class OffersController {
 	private OffersService offersService;
 	
 	@RequestMapping("/offers")
-	public String showOffers(Model model) throws Exception {
+	public String showOffers(Model model) {
 		List<Offer> offers = offersService.getCurrent();
 		//offersService.throwNewException();
 		model.addAttribute("offers", offers);

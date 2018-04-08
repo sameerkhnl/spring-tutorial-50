@@ -2,8 +2,13 @@
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+
+<fmt:message var="matchedPasswordsMsg" key="MatchedPasswords.user.password" />
+<fmt:message var="unmatchedPasswordsMsg" key="UnmatchedPasswords.user.password" />
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Create Account</title>
@@ -14,7 +19,9 @@
             src="<c:url value='/static/JS/jquery-3.3.1.min.js' />"></script>
 
     <script type="text/javascript">
-        $(document).ready(onLoad);
+        (function () {
+           $(document).ready(onLoad);
+
         var p1, p2;
 
         function onLoad() {
@@ -34,12 +41,12 @@
 
                     //$("#passwordValidationMsg").removeClass("passwordsmatch");
                     $("#passwordValidationMsg").addClass("passwordsdonotmatch");
-                    $("#passwordValidationMsg").text('The passwords do not match.');
+                    $("#passwordValidationMsg").text("${unmatchedPasswordsMsg}");
                 } else {
 
                     $("#passwordValidationMsg").removeClass("passwordsdonotmatch");
                     $("#passwordValidationMsg").addClass("passwordsmatch");
-                    $("#passwordValidationMsg").text('The passwords match.');
+                    $("#passwordValidationMsg").text("${matchedPasswordsMsg}");
                 }
             }
         }
@@ -51,6 +58,7 @@
             }
             return true;
         }
+       })();
 
     </script>
 
@@ -82,13 +90,13 @@
         </tr>
         <tr>
             <td class="label">Password</td>
-            <td><sf:input type="text" id="password" class="control"
+            <td><sf:input type="password" id="password" class="control"
                           path="password"/><br/> <sf:errors path="password"
                                                             cssClass="error"/></td>
         </tr>
         <tr>
             <td class="label">Confirm Password</td>
-            <td><input type="text" class="control"
+            <td><input type="password" class="control"
                        id="confirmPassword"/>
                 <div id="passwordValidationMsg"></div>
             </td>

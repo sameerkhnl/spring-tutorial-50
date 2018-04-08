@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: sameerkhanal
@@ -10,8 +11,8 @@
 <html>
     <head>
         <title>Admin page</title>
-        <c:url var="userscss" value="/static/css/users.css"></c:url>
-        <link href="${userscss}" rel="stylesheet" type="text/css">
+        <c:url var="userscss" value="/static/css/users.css" scope="page"></c:url>
+        <link href="${userscss}" rel="stylesheet" type="text/css" >
     </head>
     <body>
         <b>Authenticated users only.</b>

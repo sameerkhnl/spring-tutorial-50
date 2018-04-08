@@ -9,17 +9,23 @@ import javax.transaction.Transactional;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component("usersDao")
 public class UsersDao {
 	private NamedParameterJdbcTemplate template;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	public UsersDao() {
 		System.out.println("usersDao instantiated");
@@ -31,12 +37,7 @@ public class UsersDao {
 	}
 
 	public List<User> getUsers() {
-		return template.query("select * from users", new RowMapper<User>() {
-			@Override
-			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return userFromResultSet(rs, rowNum);
-			}
-		});
+		return template.query("select * from users inner join authorities on users.username = authorities.username;", new BeanPropertyRowMapper(User.class));
 	}
 
 	public User getUser(String username) {
@@ -71,7 +72,13 @@ public class UsersDao {
 
 	@Transactional
 	public boolean create(User user) {
-		BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+	    MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+	    parameterSource.addValue("username", user.getUsername());
+	    parameterSource.addValue("email", user.getEmail());
+	    parameterSource.addValue("password", passwordEncoder.encode(user.getPassword()));
+	    parameterSource.addValue("enabled", user.getEnabled());
+	    parameterSource.addValue("authority", user.getAuthority());
+		//BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
 		String sql = "insert into users(username, email, password, enabled) values (:username, :email, :password, :enabled)";
 		template.update(sql, parameterSource);
 		return template.update("insert into authorities(username, authority) values (:username, :authority)",
