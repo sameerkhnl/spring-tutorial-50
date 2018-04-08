@@ -49,5 +49,4 @@ public class OffersController {
 		offersService.createOffer(offer);
 		return "offercreated";
 	}
-
 }
