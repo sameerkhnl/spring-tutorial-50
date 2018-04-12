@@ -1,29 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<c:set var="myContext" value="${pageContext.request.contextPath}"></c:set>
-<c:url var="createAccountUrl" value="/newaccount" />
-<html>
-<head>
-<title>Login Page</title>
-<link href="${myContext}/static/css/login.css" rel="stylesheet"
-	type="text/css" />
-</head>
+	<script type="text/javascript">
+		$(document).ready(function () {
+           $('#username').focus();
+        });
+	</script>
 
-<body onload="document.f.username.focus();">
+	<c:url var="createAccountUrl" value="/newaccount" />
+	<c:url var="loginurl" value="/login" />
 
 	<h3>Login with Username and Password</h3>
 	<c:if test="${param.error != null}">
 		<div class="loginErrorMsg">Invalid username or password. Please
 			try again.</div>
 	</c:if>
-	<form name='f' action="${myContext}/login" method='POST'>
-		<table class="loginTable">
+	<form name='f' action="${loginurl}" method='POST'>
+		<table class="logintable">
 			<tr>
 				<td>User:</td>
-				<td><input type='text' name='username' value=''></td>
+				<td><input type='text' name='username' value='' id="username"></td>
 			</tr>
 			<tr>
 				<td>Password:</td>
@@ -45,5 +42,3 @@
 	</form>
 	
 	<p><a href="${createAccountUrl}" >Create new account</a></p>
-</body>
-</html>

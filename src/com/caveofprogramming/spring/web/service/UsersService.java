@@ -2,6 +2,8 @@ package com.caveofprogramming.spring.web.service;
 
 import java.util.List;
 
+import com.caveofprogramming.spring.web.dao.Offer;
+import com.caveofprogramming.spring.web.dao.OffersDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -11,23 +13,25 @@ import com.caveofprogramming.spring.web.dao.UsersDao;
 
 @Service("usersService")
 public class UsersService {
-	@Autowired
-	private UsersDao usersDao;
+    @Autowired
+    private UsersDao usersDao;
 
-	@Secured("ROLE_ADMIN")
-	public List<User> getUsers() {
-		return usersDao.getUsers();
-	}
-	
-	public void createUser(User user) {
-		usersDao.create(user);
-	}
-	
-	public User getUser(String username) {
-		return usersDao.getUser(username);
-	}
-	
-	public boolean exists(String username) {
-		return usersDao.getUser(username) != null;
-	}
+    @Secured("ROLE_ADMIN")
+    public List<User> getUsers() {
+        return usersDao.getUsers();
+    }
+
+    public void createUser(User user) {
+        usersDao.create(user);
+    }
+
+    public User getUser(String username) {
+        return usersDao.getUser(username);
+    }
+
+    public boolean exists(String username) {
+        return usersDao.exists(username);
+    }
+
+
 }

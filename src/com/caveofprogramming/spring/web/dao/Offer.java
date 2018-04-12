@@ -6,67 +6,79 @@ import javax.validation.constraints.Size;
 
 import com.caveofprogramming.spring.web.validation.ValidEmail;
 
+import java.util.Objects;
+
 public class Offer {
 	private int id;
-	
-	@Size(min=5, max=100, message="${Size.user.username}")
-	private String name;
-	
-	@NotNull
-	@ValidEmail(message="${ValidEmail.user.email}")
-	private String email;
-	
-	@Size(min=20, max=255, message="${Size.user.text}")
-	private String text;
-	
-	public Offer(String name, String email, String text) {
-		this.name = name;
-		this.email = email;
-		this.text = text;
-	}
-	
-	public Offer() {
 
-	}
+    @Size(min=20, max=255, message="${Size.offer.text}")
+    private String text;
 
-	public Offer(int id, String name, String email, String text) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.email = email;
-		this.text = text;
-	}
+	private User user;
 
+    public Offer(int id, User user, String text) {
+        this.id = id;
+        this.user = user;
+        this.text = text;
+    }
 
-	public int getId() {
+    public Offer(User user, String text) {
+        this.user = user;
+        this.text = text;
+    }
+
+    public Offer() {
+        this.user = new User();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUsername() {
+        return this.user.getUsername();
+    }
+
+    public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+
+
 	public String getText() {
 		return text;
 	}
 	public void setText(String text) {
 		this.text = text;
 	}
-	
-	@Override
-	public String toString() {
-		return "Offer [id=" + id + ", name=" + name + ", email=" + email + ", text=" + text + "]";
-	}
-	
-	
+
+    @Override
+    public String toString() {
+        return "Offer{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", user=" + user +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offer offer = (Offer) o;
+        return Objects.equals(text, offer.text) &&
+                Objects.equals(user, offer.user);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(text, user);
+    }
 }

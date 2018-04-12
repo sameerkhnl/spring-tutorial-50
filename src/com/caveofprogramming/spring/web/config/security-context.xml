@@ -16,7 +16,7 @@
             <password-encoder ref="passwordEncoder" />
 			<jdbc-user-service data-source-ref="dataSource" id="jdbcUserService"
 				users-by-username-query="select username, password, enabled from users where binary username = ?;"
-				authorities-by-username-query="select username, authority from authorities where binary username = ?;" />
+				authorities-by-username-query="select username, authority from users where binary username = ?;" />
 		</authentication-provider>
 	</authentication-manager>
 
@@ -32,6 +32,7 @@
         <intercept-url pattern="/denied" access="permitAll()" />
 		<intercept-url pattern="/createoffer" access="isAuthenticated()" />
 		<intercept-url pattern="/offercreated" access="isAuthenticated()" />
+		<intercept-url pattern="/offerdeleted" access="isAuthenticated()" />
 		<intercept-url pattern="/docreate" access="isAuthenticated()" />
 		<intercept-url pattern="/**" access="denyAll" />
 
