@@ -1,5 +1,6 @@
 package com.caveofprogramming.spring.web.dao;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -8,12 +9,18 @@ import com.caveofprogramming.spring.web.validation.ValidEmail;
 
 import java.util.Objects;
 
+@Entity
+@Table(name = "offers")
 public class Offer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-    @Size(min=20, max=255, message="${Size.offer.text}")
+    @Size(min=20, max=255, message="${Size.offer.text}", groups = {FormValidationGroup.class})
     private String text;
 
+    @ManyToOne
+    @JoinColumn(name = "username")
 	private User user;
 
     public Offer(int id, User user, String text) {

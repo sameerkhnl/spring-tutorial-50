@@ -23,9 +23,11 @@ public class OffersController {
     private OffersService offersService;
 
     @RequestMapping("/offers")
-    public String showOffers(Model model) {
+    public String showOffers(Model model, Principal principal) {
         List<Offer> offers = offersService.getCurrent();
+        boolean hasOffer = offersService.hasOffer(principal.getName());
         //offersService.throwNewException();
+        model.addAttribute("hasOffer", hasOffer);
         model.addAttribute("offers", offers);
 
         return "offers";
@@ -63,18 +65,14 @@ public class OffersController {
             offersService.delete(offer.getId());
             return "offerdeleted";
         }
-        String action = offersService.createOrUpdate(offer);
-        switch (action) {
-            case "created":
-                model.addAttribute("action", "created");
-                break;
-            case "updated":
-                model.addAttribute("action", "updated");
-                break;
-            case "couldNotCreateOrUpdate":
-                model.addAttribute("action", "couldNotCreateOrUpdate");
-                return "error";
+
+        if(offer.getId() == 0) {
+            model.addAttribute("action", "created");
+        } else {
+            model.addAttribute("action", "updated");
         }
+        offersService.createOffer(offer);
+
         return "offercreated";
     }
 }

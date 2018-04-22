@@ -15,8 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
-import javax.validation.constraints.AssertTrue;
-import java.util.List;
+import java.util.Arrays;
 
 
 @ActiveProfiles("dev")
@@ -46,28 +45,27 @@ public class OfferDaoTests {
 
     @Test
     public void testOffers() {
-        User user = new User("johnwpurcell", "ROLE_ADMIN", "John Purcell",  true, "john@cop.com", "hello");
+        User user = new User("johnwpurcell", "ROLE_ADMIN", "John Purcell", true, "john@cop.com", "hello");
+        User user2 = new User("Jonasjonassss", "ROLE_USER", "JonasJonas", false, "jonas@cop.com", "hello");
         usersDao.create(user);
-        Offer offer = new Offer(user, "This is a test offer");
-        Offer offer2 = new Offer(user, "This is a second offer.");
-        Assert.assertTrue("Offer creation should return true", offersDao.create(offer));
-        Assert.assertTrue("Offer creation should return true", offersDao.create(offer2));
+        usersDao.create(user2);
 
-        List<Offer> offers = offersDao.getOffers();
+        Offer offer = new Offer(user, "New offer from john");
+        Offer offer2 = new Offer(user2, "Offer from JonasJonas");
 
-        offer = offers.get(0);
-        offer.setText("Updated offer text..");
+        offersDao.create(Arrays.asList(offer, offer2));
 
-        Assert.assertTrue("Offer update should return true", offersDao.update(offer));
-
-        Assert.assertEquals("number of offers should be 1", 2, offers.size());
-        Assert.assertTrue("Created offer should be identical to retrieved offer", offer.equals(offers.get(0)));
-
-        Assert.assertEquals("Updated offer should match retrieved offer", offer, offersDao.getOffers().get(0));
-
-        List<Offer> offersFromUser = offersDao.getOffers("johnwpurcell");
-        Assert.assertEquals("There should be two total offers for this username", 2, offersFromUser.size());
-
+        Assert.assertEquals("No. of offers should be 1", 1, offersDao.getOffers("johnwpurcell").size());
+        Assert.assertEquals("No. of offers should be 0", 0, offersDao.getOffers("asdf").size());
+        offer2.setText("This offer has updated text");
+        user2.setEnabled(true);
+        usersDao.update(user2);
+        offersDao.saveOrUpdate(offer2);
+        Offer retrieved = offersDao.getOffer(user2.getUsername());
+        Assert.assertEquals("This offer has updated text", retrieved.getText());
+        offersDao.delete(retrieved.getId());
+        Assert.assertEquals("No. of offers should be 1", 1, offersDao.getOffers().size());
+        Assert.assertEquals("The retrieved offer should have null id", null, offersDao.getOffer(offer2.getUsername()));
     }
 
     @Test

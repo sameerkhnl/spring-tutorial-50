@@ -1,6 +1,5 @@
 package com.caveofprogramming.spring.web.service;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class OffersService {
 
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public void createOffer(Offer offer) {
-        offersDao.create(offer);
+        offersDao.saveOrUpdate(offer);
     }
 
     public boolean hasOffer(String username) {
@@ -50,28 +49,34 @@ public class OffersService {
     }
 
     public String createOrUpdate(Offer offer) {
+        String returnValue = null;
         String username = getLoggedInUsername();
         if(offer.getId() == 0) {
-            offersDao.create(offer);
-            return "created";
+            //offersDao.saveOrUpdate(offer);
+            returnValue = "created";
+        } else {
+            returnValue = "updated";
         }
-        else if(getOffer(username) != null) {
+        if(getOffer(username) != null) {
             if(offer.getId() == getOffer(username).getId()) {
-                offersDao.update(offer);
-                return "updated";
+                try {
+                    offersDao.saveOrUpdate(offer);
+                } catch (Exception e) {
+                    return returnValue = "couldnotcreateorupdate";
+                }
             }
         }
-        return "couldNotCreateOrUpdate";
+        return returnValue;
+
     }
 
-    public boolean delete(int id) {
+    public void delete(int id) {
         String username = getLoggedInUsername();
         if(getOffer(username) != null) {
             if(getOffer(username).getId() == id) {
-                return offersDao.delete(id);
+                offersDao.delete(id);
             }
         }
-        return false;
     }
 
     public String getLoggedInUsername() {

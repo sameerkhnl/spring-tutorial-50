@@ -22,28 +22,32 @@
 
 	<http use-expressions="true">
         <intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
-		<intercept-url pattern="/" access="permitAll" />
+        <intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/offers" access="permitAll" />
 		<intercept-url pattern="/static/**" access="permitAll" />
 		<intercept-url pattern="/login" access="permitAll" />
 		<intercept-url pattern="/newaccount" access="permitAll" />
 		<intercept-url pattern="/createaccount" access="permitAll" />
 		<intercept-url pattern="/loggedout" access="permitAll()" />
+		<intercept-url pattern="/message" access="permitAll()" />
         <intercept-url pattern="/denied" access="permitAll()" />
+		<intercept-url pattern="/messages" access="isAuthenticated()" />
+		<intercept-url pattern="/sendmessage" access="isAuthenticated()" />
+        <intercept-url pattern="/getmessages" access="isAuthenticated()" />
 		<intercept-url pattern="/createoffer" access="isAuthenticated()" />
 		<intercept-url pattern="/offercreated" access="isAuthenticated()" />
 		<intercept-url pattern="/offerdeleted" access="isAuthenticated()" />
 		<intercept-url pattern="/docreate" access="isAuthenticated()" />
 		<intercept-url pattern="/**" access="denyAll" />
 
-		<form-login login-page="/login" authentication-failure-url="/login?error=true" />
+		<form-login always-use-default-target="true" login-page="/login" default-target-url="/" authentication-failure-url="/login?error=true" />
 		<logout logout-success-url="/loggedout" />
 		<access-denied-handler error-page="/denied" />
         <remember-me user-service-ref="jdbcUserService" remember-me-parameter="remember-me"></remember-me>
+
 	</http>
 
     <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
     <global-method-security secured-annotations="enabled" />
-
 </beans:beans>

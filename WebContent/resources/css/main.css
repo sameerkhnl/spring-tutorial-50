@@ -7,10 +7,12 @@ table.offersTable {
 
 table.formtable {
     border-collapse: collapse;
+    padding: 10px;
+    border: 1px solid blue;
 }
 
 .formtable textarea {
-    width: 300px;
+    width: 200px;
     height: 200px;
 }
 
@@ -133,11 +135,65 @@ div.header {
 
 div.content {
     position: relative;
-    padding: 40px 10px;
+    padding: 20px 10px;
 }
 
 div.footer {
     color: gray;
     font-size: small;
 }
+
+div.toolbar {
+    position: relative;
+    padding: 40px 10px 0 10px;
+}
+
+.formtable input#delete {
+    border: solid 1px red;
+}
+
+.message{
+    margin-bottom: 10px;
+    padding: 5px;
+    border-bottom: blue dashed 1px;
+}
+
+.messagesubject {
+    font-size: large;
+    color: blue;
+    font-weight: bold;
+}
+
+.messagebody {
+    font-style: italic;
+    margin-bottom: 5px;
+}
+
+.replyform {
+    margin-top: 10px;
+    display: none;
+}
+
+.replyform textarea {
+    width: 400px;
+    height: 200px;
+    margin-bottom: 0;
+}
+
+.replybtn {
+    line-height: 25px;
+    border: solid 1px gray;
+    font-size: medium;
+    background-color: blue;
+    color: white;
+    margin: 5px 0;
+    display: block;
+}
+
+.messagesenttext {
+    color: green;
+    font-weight: bold;
+}
+
+
 

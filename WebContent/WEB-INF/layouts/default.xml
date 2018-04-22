@@ -3,6 +3,7 @@
 <tiles-definitions>
     <definition name="offers.base" template="/WEB-INF/templates/default.jsp" >
         <put-attribute name="includes" value="" />
+        <put-attribute name="toolbar" value="/WEB-INF/tiles/toolbar.jsp" />
         <put-attribute name="title" value="Offers Homepage" />
         <put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
         <put-attribute name="content" value="/WEB-INF/tiles/content.jsp" />
@@ -10,7 +11,7 @@
     </definition>
 
     <definition name="home" extends="offers.base">
-        <put-attribute name="content" value="/WEB-INF/tiles/home.jsp" />
+        <put-attribute name="content" value="/WEB-INF/tiles/offers.jsp" />
     </definition>
 
     <definition name="offers" extends="offers.base">
@@ -68,6 +69,23 @@
     <definition name="offerdeleted" extends="offers.base">
         <put-attribute name="title" value="Offer deleted" />
         <put-attribute name="content" value="/WEB-INF/tiles/offerdeleted.jsp" />
+    </definition>
+
+    <definition name="showContactForm" extends="offers.base">
+        <put-attribute name="title" value="Send a message" />
+        <put-attribute name="content" value="/WEB-INF/tiles/contact.jsp" />
+    </definition>
+
+    <definition name="messageSent" extends="offers.base">
+        <put-attribute name="title" value="Message sent" />
+        <put-attribute name="content" value="/WEB-INF/tiles/messagesent.jsp" />
+    </definition>
+
+
+    <definition name="messages" extends="offers.base">
+        <put-attribute name="title" value="Messages" />
+
+        <put-attribute name="content" value="/WEB-INF/tiles/messages.jsp" />
     </definition>
 
 </tiles-definitions>

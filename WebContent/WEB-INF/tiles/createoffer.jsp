@@ -4,6 +4,24 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
+
+<script type="text/javascript">
+    $(document).ready(onReady);
+
+    function onDeleteClick(event) {
+       var doDelete = confirm('Are you sure you want to delete this offer?');
+       if(doDelete === false) {
+           event.preventDefault();
+       }
+    }
+
+    function onReady() {
+        $('#delete').click(onDeleteClick);
+    }
+
+</script>
+
+
 <c:choose>
     <c:when test="${offer.id == 0}">
         <c:set var="submitBtnVal" value="Create advert"/>
@@ -34,7 +52,7 @@
         <c:if test="${offer.id != 0}">
             <tr>
                 <td class="label"></td>
-                <td><input type="submit" name="delete" value="Delete offer"/></td>
+                <td><input type="submit" name="delete" class="control" value="Delete offer" id="delete"/></td>
             </tr>
         </c:if>
     </table>

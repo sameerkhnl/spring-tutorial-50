@@ -1,100 +1,77 @@
 package com.caveofprogramming.spring.web.dao;
 
-import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import javax.transaction.Transactional;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Component("usersDao")
+
+@Repository("usersDao")
+@Transactional
 public class UsersDao {
-	private NamedParameterJdbcTemplate template;
 
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-	public UsersDao() {
-		System.out.println("usersDao instantiated");
-	}
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
-	@Autowired
-	private void setDataSourceTag(DataSource dataSource) {
-		this.template = new NamedParameterJdbcTemplate(dataSource);
-	}
+    public UsersDao() {
+        System.out.println("usersDao instantiated");
+    }
 
-	public List<User> getUsers() {
-		return template.query("select * from users", new BeanPropertyRowMapper(User.class));
-	}
+    private Session session() {
+        return sessionFactory.getCurrentSession();
+    }
 
-	public User getUser(String username) {
-		MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-		parameterSource.addValue("username", username);
-		try {
-			return template.queryForObject("select * from users where username = :username", parameterSource,
-					new RowMapper<User>() {
-				@Override
-				public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-					return userFromResultSet(rs, rowNum);
-				}
-			});
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
-	}
+    public List<User> getUsers() {
+        CriteriaBuilder builder = session().getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        query.where(builder.equal(root.get("username"), "johnwpurcell"));
 
-	public User userFromResultSet(ResultSet rs, int rowNum) throws SQLException{
-		User user = new User();
-		user.setUsername(rs.getString("username"));
-		user.setEnabled(rs.getBoolean("enabled"));
-		user.setName(rs.getString("name"));
-		user.setEmail(rs.getString("email"));
-		user.setPassword(rs.getString("password"));
-		return user;
-	}
+        return session().createQuery(query).getResultList();
+    }
 
-	public boolean delete(String username) {
-		MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-		parameterSource.addValue("username", username);
-		return template.update("delete from users where username = :username", parameterSource) == 1;
-	}
+    public User getUser(String username) {
 
-	@Transactional
-	public boolean create(User user) {
-	    MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-	    parameterSource.addValue("username", user.getUsername());
-	    parameterSource.addValue("name", user.getName());
-	    parameterSource.addValue("email", user.getEmail());
-	    parameterSource.addValue("password", passwordEncoder.encode(user.getPassword()));
-	    parameterSource.addValue("enabled", user.isEnabled());
-	    parameterSource.addValue("authority", user.getAuthority());
-		//BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
-		String sql = "insert into users(username, authority, name, email, password, enabled) values (:username, :authority, :name, :email, :password, :enabled)";
-		return template.update(sql, parameterSource) == 1;
-	}
+        CriteriaBuilder builder = session().getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        query.where(builder.equal(root.get("username"), username));
+        return session().createQuery(query).uniqueResult();
+    }
 
-	public int[] create(List<User> users) {
-		SqlParameterSource[] parameterSource = SqlParameterSourceUtils.createBatch(users);
-		String sql = "insert into users(username, name, email, password) values :username, :name, :email, :password)";
-		return template.batchUpdate(sql, parameterSource);
-	}
+    public void create(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        session().persist(user);
+    }
 
-	public boolean update(User user) {
-		BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
-		String sql = "update users set username = :username, name = :name, email = :email, password = :password, enabled = :enabled where username = :username";
-		return template.update(sql, parameterSource) == 1;
-	}
+    public void create(List<User> users) {
+        for(User user: users) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            session().persist(user);
+        }
+    }
 
-	public boolean exists(String username) {
-		return getUser(username) != null;
-	}
+
+
+
+    public void update(User user) {
+        session().update(user);
+    }
+
+    public boolean exists(String username) {
+        return getUser(username) != null;
+    }
 
 }

@@ -1,34 +1,44 @@
 package com.caveofprogramming.spring.web.dao;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class User {
+@Entity
+@Table(name = "users")
+public class User implements Serializable {
 
-    @NotBlank(message = "${NotBlank.user.username}")
-    @Size(min = 5, max = 15, message = "${Size.user.username}")
-    @Pattern(regexp = "^\\w{5,}$", message = "${Pattern.user.username}")
+    @NotBlank(message = "${NotBlank.user.username}", groups = {FormValidationGroup
+            .class})
+    @Size(min = 5, max = 15, message = "${Size.user.username}", groups = {FormValidationGroup.class, PersistenceValidationGroup.class})
+    @Pattern(regexp = "^\\w{5,}$", message = "${Pattern.user.username}", groups = {FormValidationGroup.class, PersistenceValidationGroup.class})
+    @Id
+    @Column(name = "username")
     private String username;
     private String authority;
 
-    @NotBlank(message = "${NotBlank.user.name}")
-    @Size(min = 5, max = 20, message = "${Size.user.name}")
+    @NotBlank(message = "${NotBlank.user.name}", groups = {FormValidationGroup.class, PersistenceValidationGroup.class})
+    @Size(min = 5, max = 20, message = "${Size.user.name}", groups = {FormValidationGroup.class, PersistenceValidationGroup.class})
     private String name;
 
     private boolean enabled;
 
-    @NotBlank(message = "${NotBlank.user.email}")
-    @Email(message = "${Email.user.email}")
+    @NotBlank(message = "${NotBlank.user.email}", groups = {FormValidationGroup.class})
+    @Email(message = "${Email.user.email}", groups = {FormValidationGroup.class})
     private String email;
 
-    @NotBlank(message = "${Password cannot be blank.}")
-    @Pattern(regexp = "^\\S+$", message = "${Pattern.user.password}")
-    @Size(min = 5, max = 80, message = "${Size.user.password }")
+    @NotBlank(message = "${Password cannot be blank.}", groups = {FormValidationGroup.class, PersistenceValidationGroup.class})
+    @Pattern(regexp = "^\\S+$", message = "${Pattern.user.password}", groups = {FormValidationGroup.class, PersistenceValidationGroup.class})
+    @Size(min = 5, max = 80, message = "${Size.user.password }", groups = {FormValidationGroup.class})
     private String password;
-
 
     public User() {
 

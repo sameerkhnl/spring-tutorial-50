@@ -2,7 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <context:component-scan base-package="com.caveofprogramming.spring.web.test"/>
 
@@ -14,8 +18,59 @@
             <property name="url" value="${jdbc.url}"/>
             <property name="username" value="${jdbc.username}"/>
             <property name="password" value="${jdbc.password}"/>
+        </bean>
+
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+            <property name="dataSource" ref="dataSource"/>
+
+            <property name="hibernateProperties">
+
+                <props>
+                    <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                    <prop key="javax.persistence.validation.group.pre-persist">com.caveofprogramming.spring.web.dao.PersistenceValidationGroup</prop>
+                    <prop key="javax.persistence.validation.group.pre-update">com.caveofprogramming.spring.web.dao.PersistenceValidationGroup</prop>
+                    <prop key="javax.persistence.validation.group.pre-remove">com.caveofprogramming.spring.web.dao.PersistenceValidationGroup</prop>
+                    <prop key="show_sql">true</prop>
+
+                </props>
+
+            </property>
+
+            <property name="packagesToScan">
+                <list>
+                    <value>com.caveofprogramming.spring.web.dao</value>
+                </list>
+            </property>
+        </bean>
+
+        <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+            <property name="dataSource" ref="dataSource"/>
+            <property name="sessionFactory" ref="sessionFactory" />
+        </bean>
+        <tx:annotation-driven />
+
+        <bean id="hibernateJPADialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+
+        <bean id="exceptionTranslator" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="smtp.gmail.com" />
+            <property name="port" value="465" />
+            <property name="username" value="khanal.sam91@gmail.com" />
+            <property name="password" value="....." />
+            <property name="javaMailProperties">
+                <props>
+                    <prop key="mail.smtp.auth">true</prop>
+                    <prop key="mail.smtp.startls.enable">true</prop>
+                    <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+                    <prop key="mail.smtp.socketFactory.port">465</prop>
+                    <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+                </props>
+
+            </property>
 
         </bean>
+
     </beans>
 
 </beans>
